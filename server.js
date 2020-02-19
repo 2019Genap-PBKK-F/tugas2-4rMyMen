@@ -1,10 +1,11 @@
-
-var http = require('http');
-
-var server = http.createServer(function (req, res) {
-    res.end("Hola~");
+  
+var restify = require('restify'); 
+function respond(req, res, next) { 
+res.send('hello '+ req.params.name);
+} 
+var server = restify.createServer();
+server.get('/hello/:name', respond);
+server.head('/hello/:name', respond); 
+server.listen(8013, function() {
+ console.log('%s listening at %s', server.name, server.url);
 });
-
-server.listen(8076);
-
-console.log("server running on http://localhost:8076");
