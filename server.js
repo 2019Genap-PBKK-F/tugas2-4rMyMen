@@ -1,11 +1,17 @@
-  
-var restify = require('restify'); 
-function respond(req, res, next) { 
-res.send('hello '+ req.params.name);
-} 
-var server = restify.createServer();
-server.get('/hello/:name', respond);
-server.head('/hello/:name', respond); 
-server.listen(8013, function() {
- console.log('%s listening at %s', server.name, server.url);
+const http = require("http");
+const hostname = '10.199.14.46';
+const port = 8076;
+
+//Create HTTP server and listen on port 8020 for requests
+const server = http.createServer((req, res) => {
+
+  //Set the response HTTP header with HTTP status and Content type
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end('Hi World\n');
+});
+
+//listen for request on port 3000, and as a callback function have the port listened on logged
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
 });
