@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var sql = require("mssql");
-var conn = require("../Connection/connect")();
+var conn = require("../connection/connect")();
 
 var routes = function()
 {
