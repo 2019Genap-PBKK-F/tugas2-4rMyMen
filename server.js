@@ -1,8 +1,9 @@
-const http = require("http");
+var express = require('express');
+var app = express();
 const hostname = '10.199.14.46';
 const port = 8013;
 
-var productcontroller = require('./controller/productcontroller')();
+var productcontroller = require('./controller/productcontroller.js')();
 
 app.get("/",function(request, response)
 {

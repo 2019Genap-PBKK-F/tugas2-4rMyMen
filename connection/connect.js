@@ -4,7 +4,7 @@ var connect = function()
     var conn = new sql.ConnectionPool({
         user: 'su',
         password: 'SaSa1212',
-        server: '10.199.14.46',
+        server: '10.199.13.253',
         database: 'nrp05111740000076'
     });
     console.log(conn)
