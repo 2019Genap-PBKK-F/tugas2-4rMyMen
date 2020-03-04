@@ -10,8 +10,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors())
 
-var productcontroller = require('./controller/productcontroller.js')();
-
 var conn =
 {
         user: 'su',
@@ -24,7 +22,6 @@ app.get("/",function(request, response)
 {
     response.json({"Message":"Hello"});
 });
-app.use("/api/product", productcontroller);
 
 var query = function (res, query, params) {
     sql.connect(conn, function (err) {
