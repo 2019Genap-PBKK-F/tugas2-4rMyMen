@@ -165,6 +165,12 @@ app.get("/api/Indikator_Periode/", function(req, res)
     executeQuery(res, query, null, 0);
 });
 
+app.get("/api/SatuanKerja/nama/:id", function(req, res)
+{
+    var query = "SELECT distinct sk1.id,sk1.nama from SatuanKerja as sk1 inner join Indikator_SatuanKerja on sk1.id=Indikator_SatuanKerja.id_satker WHERE sk1.id='" + req.params.id + "' OR sk1.id_induk_satker='" + req.params.id + "'"
+    executeQuery(res, query, null, 0);
+});
+
 app.get("/api/Indikator_Periode/:id", function(req, res)
 {
     var query = "select * from Indikator_Periode where id=" + req.params.id;
@@ -179,7 +185,7 @@ app.get("/api/SatuanKerja/", function(req, res)
 
 app.get("/api/SatuanKerja/:id", function(req, res)
 {
-    var query = "select * from SatuanKerja where id=" + req.params.id;
+  var query = "select * from SatuanKerja where id='" + req.params.id + "'";
     executeQuery(res, query, null, 0);
 });
 // Capaian_Unit
@@ -691,24 +697,31 @@ app.delete("/api/indikator-satuan-kerja/:id&:id2&:id3", function(req, res)
 //tabel konkin
 app.get("/api/konkin/:id", function(req, res)
 {
-    var query = "SELECT a.aspek, a.komponen_aspek, mi.nama, isk.bobot,isk.capaian,isk.capaian as cap FROM aspek AS a inner JOIN MasterIndikator AS mi ON a.id=mi.id_aspek inner JOIN Indikator_SatuanKerja as isk ON isk.id_indikator_periode=mi.id where isk.id_satker='"+req.params.id+"'";
+    var query = "SELECT a.aspek, a.komponen_aspek, mi.nama, isk.bobot,isk.target,isk.capaian as cap FROM aspek AS a inner JOIN MasterIndikator AS mi ON a.id=mi.id_aspek inner JOIN Indikator_SatuanKerja as isk ON isk.id_indikator_periode=mi.id where isk.id_satker='"+req.params.id+"'";
     executeQuery(res, query, null, 0);
 });
-app.get("/api/konkin/", function(req, res)
+
+app.get("/api/konkin/special/:id", function(req, res)
 {
-    var query = "SELECT a.aspek, a.komponen_aspek, mi.nama, isk.bobot,isk.capaian,isk.capaian as cap FROM aspek AS a inner JOIN MasterIndikator AS mi ON a.id=mi.id_aspek inner JOIN Indikator_SatuanKerja as isk ON isk.id_indikator_periode=mi.id";
+    var query = "SELECT a.aspek, a.komponen_aspek, mi.nama, isk.bobot,isk.target,isk.capaian as cap FROM aspek AS a inner JOIN MasterIndikator AS mi ON a.id=mi.id_aspek inner JOIN Indikator_SatuanKerja as isk ON isk.id_indikator_periode=mi.id INNER JOIN SatuanKerja AS sk ON sk.id=isk.id_satker where isk.id_satker='"+req.params.id+"' OR sk.id_induk_satker='"+req.params.id+"'";
+    executeQuery(res, query, null, 0);
+});
+
+  app.get("/api/konkin/", function(req, res)
+{
+    var query = "SELECT a.aspek, a.komponen_aspek, mi.nama, isk.bobot,isk.target,isk.capaian as cap FROM aspek AS a inner JOIN MasterIndikator AS mi ON a.id=mi.id_aspek inner JOIN Indikator_SatuanKerja as isk ON isk.id_indikator_periode=mi.id";
     executeQuery(res, query, null, 0);
 });
 
 //login
-app.get('/auth/login/:email', function(req, res)
+app.post('/api/login/', function(req, res)
 {
-  var model = [
-    { name: 'email', sqltype: sql.VarChar, value: req.params.email }
+  var column = [
+    { name: 'email', sqltype: sql.VarChar, value: req.body.email },
+    { name: 'password', sqltype: sql.VarChar, value: req.body.password }
   ]
-  var query = 'select id, nama, email from SatuanKerja where email = @email'
-
-  executeQuery(res, query, model, 1)
+  var query = 'select id, nama from SatuanKerja where email = @email and @email = @password';
+  executeQuery(res, query, column, 1)
 })
 
 app.listen(port, hostname, function () {
